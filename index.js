@@ -57,7 +57,10 @@ async function run() {
         })
         // application or cart api's
         app.get('/carts', async (req, res) => {
-            const result = await cartsCollection.find().toArray();
+            const email = req.query.email;
+            const query = {email: email};
+            // console.log(query);
+            const result = await cartsCollection.find(query).toArray();
             res.send(result);
         })
         app.post('/carts', async (req, res) => {
