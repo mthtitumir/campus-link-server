@@ -29,6 +29,7 @@ async function run() {
         const collegesCollection = client.db('campusDB').collection('colleges');
         const cartsCollection = client.db('campusDB').collection('carts');
         const usersCollection = client.db('campusDB').collection('users');
+        const reviewsCollection = client.db('campusDB').collection('reviews');
         //colleges api's
         app.get('/colleges', async (req, res) => {
             const result = await collegesCollection.find().toArray();
@@ -43,6 +44,26 @@ async function run() {
                 return res.send({ message: 'user already exists here!' })
             }
             const result = await usersCollection.insertOne(user);
+            res.send(result);
+        })
+        app.get('/users', async (req, res) => {
+            const result = await usersCollection.find().toArray();
+            res.send(result);
+        })
+        // reviews api's
+        app.get('/reviews', async (req, res) => {
+            const result = await reviewsCollection.find().toArray();
+            res.send(result);
+        })
+        // application or cart api's
+        app.post('/carts', async (req, res) => {
+            const application = req.body;
+            const query = { email: application.email };
+            const oldApplicant = await cartsCollection.findOne(query);
+            if (oldApplicant) {
+                return res.send({ message: 'Applicant already exists!' })
+            }
+            const result = await usersCollection.insertOne(application);
             res.send(result);
         })
         // Send a ping to confirm a successful connection
