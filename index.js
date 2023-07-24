@@ -56,6 +56,10 @@ async function run() {
             res.send(result);
         })
         // application or cart api's
+        app.get('/carts', async (req, res) => {
+            const result = await cartsCollection.find().toArray();
+            res.send(result);
+        })
         app.post('/carts', async (req, res) => {
             const application = req.body;
             const query = { email: application.email };
@@ -63,7 +67,7 @@ async function run() {
             if (oldApplicant) {
                 return res.send({ message: 'Applicant already exists!' })
             }
-            const result = await usersCollection.insertOne(application);
+            const result = await cartsCollection.insertOne(application);
             res.send(result);
         })
         // Send a ping to confirm a successful connection
